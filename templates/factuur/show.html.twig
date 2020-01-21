@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Factuur{% endblock %}
+
+{% block body %}
+    <h1>Factuur</h1>
+
+    <table class="table">
+        <thead class="thead-dark">
+                <tr>
+                    <th>Gerecht</th>
+                    <th>Prijs (Per stuk)</th>
+                    <th>Aantal</th>
+                    <th>Prijs</th>
+                </tr>
+        </thead>
+        <tbody>
+                {% set Totaal = 0 %}
+
+                {% for Bestelling in Bestellingen %}
+                    {% set Aantal = 0 %}
+
+                    {% for bestelling in Aantallen|keys %}
+                        {% if bestelling is same as(Bestelling.gerecht.id) %}
+                            {% set Aantal = Aantallen[bestelling]["Aantal"] %}
+                        {% endif %}
+                    {% endfor %}
+                    <tr>
+                        <td>
+                            {{ Bestelling.gerecht }}
+                        </td>
+                        <td>
+                            € {{ Bestelling.gerecht.prijs|number_format(2, ',', '.') }}
+                        </td>
+                        <td>
+                            {{ Aantal }}
+                        </td>
+                        <td>
+                            € {{ (Aantal * Bestelling.gerecht.prijs)|number_format(2, ',', '.') }}
+                            {% set Totaal = Totaal + (Aantal * Bestelling.gerecht.prijs) %}
+                        </td>
+                    </tr>
+                {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr class="table-dark">
+                <td colspan="2"></td>
+                <td class="text-dark">Totaal:</td>
+                <td class="text-dark">€ {{ Totaal|number_format(2, ',', '.') }}</td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <button onclick="window.print()" class="btn btn-info d-print-none">Print</button>
+
+    <a href="{{ path('factuur_index') }}" class="d-print-none">back to list</a>
+
+    <a href="{{ path('factuur_edit', {'id': factuur.id}) }}" class="d-print-none">edit</a>
+
+    {{ include('factuur/_delete_form.html.twig') }}
+{% endblock %}

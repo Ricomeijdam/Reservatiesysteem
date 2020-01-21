@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservatie index{% endblock %}
+
+{% block body %}
+    <h1>Reservatie index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tijd</th>
+                <th>Datum</th>
+                <th>Hoeveelheid</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for reservatie in reservaties %}
+            <tr>
+                <td>{{ reservatie.id }}</td>
+                <td>{{ reservatie.Tijd ? reservatie.Tijd|date('H:i:s') : '' }}</td>
+                <td>{{ reservatie.Datum ? reservatie.Datum|date('Y-m-d') : '' }}</td>
+                <td>{{ reservatie.Hoeveelheid }}</td>
+                <td>
+                    <a href="{{ path('reservatie_show', {'id': reservatie.id}) }}">show</a>
+                    <a href="{{ path('reservatie_edit', {'id': reservatie.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('reservatie_new') }}">Create new</a>
+{% endblock %}
